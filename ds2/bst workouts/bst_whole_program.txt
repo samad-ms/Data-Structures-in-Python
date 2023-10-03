@@ -1,0 +1,122 @@
+class BST:
+    def __init__(self,data):
+        self.lchild=None
+        self.key = data
+        self.rchild=None
+
+    def insertion(self,data):
+        if self.key is None:
+            self.key=data
+            return
+        if data<self.key:
+            if self.lchild:
+                self.lchild.insertion(data)
+            else:
+                self.lchild=BST(data)
+        if data>self.key:
+            if self.rchild:
+                self.rchild.insertion(data)
+            else:
+                self.rchild=BST(data)
+
+    def search(self,data):
+        if self.key == data:
+            print("found")
+            return
+        if data<self.key:
+            if self.lchild:
+                self.lchild.search(data)
+            else:
+                print("not pressent")
+        if data>self.key:
+            if self.rchild:
+                self.rchild.search(data)
+            else:
+                print("not pressent")
+
+    def inorder(self):
+        if self.lchild:
+            self.lchild.inorder()
+        print(self.key,end=" ")
+        if self.rchild:
+            self.rchild.inorder()
+
+    def min_value(self):
+        if self.key is None:
+            return
+        current=self
+        while current.lchild:
+            current=current.lchild
+        print("min value = ",current.key)
+
+    def max_value(self):
+        if self.key is None:
+            return
+        current = self
+        while current.rchild:
+            current = current.rchild
+        print("max value = ", current.key)
+
+    def delete_node(self,data):
+        if self.key is None:
+            self.key = data
+            return
+        if data<self.key:
+            if self.lchild:
+                self.lchild.delete_node(data)
+            else:
+                print("not pressent")
+        elif data>self.key:
+            if self.rchild:
+                self.rchild.delete_node(data)
+            else:
+                print("not pressent")
+        else:
+            if self.lchild is None:
+                temp = self.rchild
+                self = None
+                return temp
+            if self.rchild is None:
+                temp = self.lchild
+                self = None
+                return temp
+            node = self.rchild
+            while node.lchild:
+                node = node.lchild
+            self.key = node.key
+            self.rchild = self.rchild.delete_node(node.key)
+        return self
+
+    def total_nodes(self):
+        count = 0
+        if self.lchild:
+            count += self.lchild.total_nodes()
+        count += 1
+        if self.rchild:
+            count += self.rchild.total_nodes()
+        return count
+
+    def isValidBST(self):
+        def valid(node, left, right):
+            if not node:
+                return True
+            if not (left < node.key < right):
+                return False
+            return valid(node.lchild, left, node.key) and valid(node.rchild, node.key, right)
+        return valid(self, float("-inf"), float("inf"))
+
+
+root=BST(None)
+l1=[50,40,60,25,45]
+for i in l1:
+    root.insertion(i)
+root.inorder()
+print()
+root.min_value()
+root.max_value()
+root.delete_node(24)
+root.inorder()
+print()
+print("total no.of nodes ",root.total_nodes())
+
+print(root.isValidBST())
